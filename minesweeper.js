@@ -17,34 +17,28 @@ export const annotate = (input) => {
 
   // Helper func to populate adj cells +1
   let populateAdj = (r,c,arr) => {
-    let directions = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]
-    for (let i = 0; i < directions.length; i++) {
-      let r_scan = r+directions[i][0]
-      let c_scan = c+directions[i][1]
+    const directions = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]
+    directions.forEach((dir) => {
+      const r_scan = r+dir[0]
+      const c_scan = c+dir[1]
       if (r_scan >= 0 && r_scan < arr.length
           && c_scan >=0 && c_scan < arr[r_scan].length) {
-        if(arr[r_scan][c_scan] === '*') {
-          continue;
-        } else if (arr[r_scan][c_scan] === ' ') {
+        if (arr[r_scan][c_scan] === ' ') {
           arr[r_scan][c_scan] = "1"
-        } else {
+        } else if (arr[r_scan][c_scan] !== '*') {
           arr[r_scan][c_scan] = (parseInt(arr[r_scan][c_scan])+1).toString();
         }
       }
-    }
+    })
   }
 
   // Iterate through matrix. If found mine,
   // call above function to populate count
   for (let i = 0; i < res.length; i++) {
     for(let j = 0; j < res[i].length; j++) {
-      let cell = res[i][j]
-      if (cell.match(/[*]|\s/) === false) {
-        throw new Error("Found illegal character in game")
-      }
-      if (cell === '*') {
-        populateAdj(i, j, res)
-      }
+      const cell = res[i][j]
+      if (cell.match(/[*]|\s/) === false) throw new Error("Found illegal character in game");
+      if (cell === '*') populateAdj(i, j, res);
     }
   }
 
